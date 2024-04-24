@@ -1,22 +1,34 @@
+# music_player/views.py
+
 from django.shortcuts import render
-
-def index(request):
-    songs = []  # Замініть це на вашу логіку отримання списку пісень
-    return render(request, 'music_player/index.html', {'songs': songs})
-import os
-from django.shortcuts import render, redirect
+from django.http import HttpResponse
 from django.conf import settings
+import os
+from pygame import mixer
+
+mixer.init()
 
 def index(request):
-    songs_dir = os.path.join(settings.BASE_DIR, 'music')  # Директорія з музичними файлами
+    songs_dir = os.path.join(settings.BASE_DIR, 'static/music')  # Директорія з музичними файлами
     songs = os.listdir(songs_dir)  # Список пісень
     return render(request, 'music_player/index.html', {'songs': songs})
 
-def upload_songs(request):
-    if request.method == 'POST' and request.FILES.getlist('songs'):
-        songs_dir = os.path.join(settings.BASE_DIR, 'music')
-        for song_file in request.FILES.getlist('songs'):
-            with open(os.path.join(songs_dir, song_file.name), 'wb+') as destination:
-                for chunk in song_file.chunks():
-                    destination.write(chunk)
-    return redirect('index')
+def play(request, song):
+    song_path = os.path.join(settings.BASE_DIR, 'static/music', song)
+    mixer.music.load(song_path)
+    mixer.music.play()
+    return HttpResponse(status=200)
+
+def pause(request):
+    mixer.music.pause()
+    return HttpResponse(status=200)
+
+def stop(request):
+    mixer.music.stop()
+    return HttpResponse(status=200)
+
+def resume(request):
+    mixer.music.unpause()
+    return HttpResponse(status=200)
+
+
