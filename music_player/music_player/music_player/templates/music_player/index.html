@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Music Player{% endblock %}</title>
+    <!-- Підключення стилів -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container">
+        {% block content %}{% endblock %}
+    </div>
+    <!-- Підключення скриптів -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
+
+{% extends "music_player/base.html" %}
+
+{% block title %}Music Player{% endblock %}
+
+{% block content %}
+<h1>Music Player</h1>
+
+<!-- Додати музику -->
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <input type="file" name="songs" multiple>
+    <button type="submit">Додати музику</button>
+</form>
+
+<!-- Список пісень -->
+<ul>
+    {% for song in songs %}
+    <li>{{ song }}</li>
+    {% endfor %}
+</ul>
+
+<!-- Контроли плеєра -->
+<button id="play">Play</button>
+<button id="pause">Pause</button>
+<button id="stop">Stop</button>
+<button id="resume">Resume</button>
+<button id="prev">Prev</button>
+<button id="next">Next</button>
+{% endblock %}
